@@ -45,23 +45,23 @@ export async function POST(
     }
 
     let { data: vendor } = await supabaseAdmin
-      .from("vendors")
-      .select("*")
-      .eq("handle", handle)
-      .single();
+  .from("vendors")
+  .select("*")
+  .eq("handle", handle)
+  .single() as { data: any };
 
     if (!vendor) {
-      const { data: newVendor } = await supabaseAdmin
-        .from("vendors")
-        .insert({
-          handle,
-          platform,
-          trust_score: 0,
-          total_reviews: 0,
-          flagged: false,
-        } as any)
-        .select()
-        .single();
+  const { data: newVendor } = await supabaseAdmin
+  .from("vendors")
+  .insert({
+    handle,
+    platform,
+    trust_score: 0,
+    total_reviews: 0,
+    flagged: false,
+  } as any)
+  .select()
+  .single() as { data: any };
 
       vendor = newVendor;
     }
