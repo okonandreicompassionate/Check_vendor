@@ -1,4 +1,4 @@
- import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { supabaseAdmin } from "@/lib/supabase";
 import { z } from "zod";
@@ -7,7 +7,7 @@ const ReportSchema = z.object({
   verdict: z.enum(["legit", "scammed"]),
   comment: z.string().max(500).optional(),
   evidence_url: z.string().url().optional(),
-  platform: z.enum(["instagram", "whatsapp", "twitter"]).default("instagram"),
+  platform: z.enum(["instagram", "whatsapp", "twitter", "tiktok"]).default("instagram"),
 });
 
 export async function POST(
@@ -20,7 +20,6 @@ export async function POST(
     const ip = request.headers.get("x-forwarded-for") ?? "unknown";
     const ipHash = createHash("sha256").update(ip).digest("hex");
 
-    // ── Parse + validate body ────────────────────────────────────────────
     const body = await request.json();
     const parsed = ReportSchema.safeParse(body);
 
@@ -33,7 +32,6 @@ export async function POST(
 
     const { verdict, comment, evidence_url, platform } = parsed.data;
 
-    // ── Spam check: max 3 reviews per IP per vendor ──────────────────────
     const { data: existing } = await supabaseAdmin
       .from("reviews")
       .select("id")
@@ -46,7 +44,6 @@ export async function POST(
       );
     }
 
-    // ── Find or create vendor ────────────────────────────────────────────
     let { data: vendor } = await supabaseAdmin
       .from("vendors")
       .select("*")
@@ -62,7 +59,7 @@ export async function POST(
           trust_score: 0,
           total_reviews: 0,
           flagged: false,
-        })
+        } as any)
         .select()
         .single();
 
@@ -76,7 +73,6 @@ export async function POST(
       );
     }
 
-    // ── Insert review ────────────────────────────────────────────────────
     const { data: review, error } = await supabaseAdmin
       .from("reviews")
       .insert({
@@ -85,7 +81,7 @@ export async function POST(
         comment: comment ?? null,
         evidence_url: evidence_url ?? null,
         ip_hash: ipHash,
-      })
+      } as any)
       .select()
       .single();
 
