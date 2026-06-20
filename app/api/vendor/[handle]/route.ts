@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { ai } from "@/lib/ai/provider";
@@ -12,26 +13,27 @@ export async function GET(
     const handle = rawHandle.toLowerCase().trim();
     const keyId = request.headers.get("x-api-key-id");
 
+    const platform = "unknown";
+
     // Find or create vendor
-    let { data: vendor } = await supabaseAdmin
-let { data: vendor } = await supabaseAdmin
-  .from("vendors")
-  .select("*")
-  .eq("handle", handle)
-  .single() as { data: any };
+    let { data: vendor } = (await supabaseAdmin
+      .from("vendors")
+      .select("*")
+      .eq("handle", handle)
+      .single()) as { data: any };
 
     if (!vendor) {
-const { data: newVendor } = await supabaseAdmin
-  .from("vendors")
-  .insert({
-    handle,
-    platform,
-    trust_score: 0,
-    total_reviews: 0,
-    flagged: false,
-  } as any)
-  .select()
-  .single() as { data: any };
+      const { data: newVendor } = (await supabaseAdmin
+        .from("vendors")
+        .insert({
+          handle,
+          platform,
+          trust_score: 0,
+          total_reviews: 0,
+          flagged: false,
+        } as any)
+        .select()
+        .single()) as { data: any };
 
       vendor = newVendor;
     }
@@ -87,10 +89,11 @@ const { data: newVendor } = await supabaseAdmin
 
     // Increment paid key usage
     if (keyId) {
-      await supabaseAdmin.rpc("increment_lookups", { key_id: keyId });
+      await supabaseAdmin.rpc("increment_lookups", {
+        key_id: keyId,
+      });
     }
 
-    // Response
     return NextResponse.json({
       handle: vendor.handle,
       platform: vendor.platform,
@@ -106,12 +109,13 @@ const { data: newVendor } = await supabaseAdmin
       is_suspicious: breakdown.is_suspicious,
       checked_at: new Date().toISOString(),
     });
-
   } catch (err) {
     console.error("[GET /api/vendor]", err);
+
     return NextResponse.json(
       { error: "Something went wrong." },
       { status: 500 }
     );
   }
 }
+```
