@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
 
     const { business_name, email, tier } = parsed.data;
 
-    // ── Check if email already has a key ─────────────────────────────────
     const { data: existing } = await supabaseAdmin
       .from("api_keys")
       .select("id")
@@ -43,11 +42,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ── Generate raw key (shown to user once) ─────────────────────────────
     const rawKey = `cv_${randomBytes(32).toString("hex")}`;
     const keyHash = createHash("sha256").update(rawKey).digest("hex");
 
-    // ── Store hashed key ──────────────────────────────────────────────────
     const { error } = await supabaseAdmin.from("api_keys").insert({
       key_hash: keyHash,
       business_name,
@@ -55,7 +52,7 @@ export async function POST(request: NextRequest) {
       tier,
       lookups_used: 0,
       lookups_limit: TIER_LIMITS[tier],
-    });
+    } as any);
 
     if (error) {
       return NextResponse.json(
@@ -79,4 +76,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}
