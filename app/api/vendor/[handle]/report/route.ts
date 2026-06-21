@@ -35,7 +35,7 @@ export async function POST(
     const { data: existing } = await supabaseAdmin
       .from("reviews")
       .select("id")
-      .eq("ip_hash", ipHash);
+      .eq("ip_hash", ipHash) as { data: any };
 
     if ((existing?.length ?? 0) >= 3) {
       return NextResponse.json(
@@ -45,23 +45,23 @@ export async function POST(
     }
 
     let { data: vendor } = await supabaseAdmin
-  .from("vendors")
-  .select("*")
-  .eq("handle", handle)
-  .single() as { data: any };
+      .from("vendors")
+      .select("*")
+      .eq("handle", handle)
+      .single() as { data: any };
 
     if (!vendor) {
-  const { data: newVendor } = await supabaseAdmin
-  .from("vendors")
-  .insert({
-    handle,
-    platform,
-    trust_score: 0,
-    total_reviews: 0,
-    flagged: false,
-  } as any)
-  .select()
-  .single() as { data: any };
+      const { data: newVendor } = await supabaseAdmin
+        .from("vendors")
+        .insert({
+          handle,
+          platform,
+          trust_score: 0,
+          total_reviews: 0,
+          flagged: false,
+        } as any)
+        .select()
+        .single() as { data: any };
 
       vendor = newVendor;
     }
@@ -83,7 +83,7 @@ export async function POST(
         ip_hash: ipHash,
       } as any)
       .select()
-      .single();
+      .single() as { data: any; error: any };
 
     if (error) {
       return NextResponse.json(

@@ -45,14 +45,16 @@ export async function POST(request: NextRequest) {
     const rawKey = `cv_${randomBytes(32).toString("hex")}`;
     const keyHash = createHash("sha256").update(rawKey).digest("hex");
 
-    const { error } = await supabaseAdmin.from("api_keys").insert({
-      key_hash: keyHash,
-      business_name,
-      email,
-      tier,
-      lookups_used: 0,
-      lookups_limit: TIER_LIMITS[tier],
-    } as any);
+   const insertData = {
+  key_hash: keyHash,
+  business_name,
+  email,
+  tier,
+  lookups_used: 0,
+  lookups_limit: TIER_LIMITS[tier],
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const { error } = await (supabaseAdmin.from("api_keys") as any).insert(insertData);
 
     if (error) {
       return NextResponse.json(
