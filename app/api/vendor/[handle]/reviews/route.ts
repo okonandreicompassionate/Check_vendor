@@ -13,12 +13,11 @@ export async function GET(
     const limit = Math.min(Number(searchParams.get("limit") ?? 10), 50);
     const offset = (page - 1) * limit;
 
-    // ── Find vendor ──────────────────────────────────────────────────────
-    const { data: vendor } = await supabaseAdmin
-      .from("vendors")
-      .select("id, handle, platform, trust_score, total_reviews")
-      .eq("handle", handle)
-      .single();
+const { data: vendor } = await supabaseAdmin
+  .from("vendors")
+  .select("id, handle, platform, trust_score, total_reviews")
+  .eq("handle", handle)
+  .single() as { data: any };
 
     if (!vendor) {
       return NextResponse.json(
