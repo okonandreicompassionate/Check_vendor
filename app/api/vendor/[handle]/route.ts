@@ -58,11 +58,16 @@ export async function GET(
       .filter(Boolean) as string[];
 
     // Run AI analysis
-    const [sentiment, fakeDetection] = await Promise.all([
-      ai.analyzeSentiment(reviewTexts),
-      ai.detectFakeReviews(allReviews),
-    ]);
+console.log("START SENTIMENT");
 
+const sentiment = await ai.analyzeSentiment(reviewTexts);
+
+console.log("SENTIMENT DONE");
+
+const fakeDetection =
+  await ai.detectFakeReviews(allReviews);
+
+console.log("FAKE DETECTION DONE");
     // Calculate score
     const breakdown = calculateScore(
       allReviews,

@@ -168,7 +168,7 @@ export default function VendorPage() {
   };
 
   const share = () => {
-    const text = `I just checked ${displayHandle} on CheckVendor — trust score ${vendor?.trust_score ?? "?"}/100 (${verdictLabel(vendor?.verdict ?? "")}) checkvendor.ng/vendor/${handle}?platform=${platform}`;
+    const text = `I just checked ${displayHandle} on Vendorfy — trust score ${vendor?.trust_score ?? "?"}/100 (${verdictLabel(vendor?.verdict ?? "")}) Vendorfy.ng/vendor/${handle}?platform=${platform}`;
     if (navigator.share) {
       navigator.share({ text });
     } else {
@@ -221,7 +221,7 @@ export default function VendorPage() {
         </Link>
         <div className="flex items-center gap-2">
           <Shield className="text-green-400" size={18} />
-          <span className="font-bold text-sm">CheckVendor</span>
+          <span className="font-bold text-sm">Vendorfy</span>
         </div>
         <button
           onClick={share}
@@ -394,11 +394,11 @@ export default function VendorPage() {
                     {timeAgo(review.created_at)}
                   </span>
                 </div>
-                {review.comment && (
-                  <p className="text-white/60 text-sm leading-relaxed">
-                    {review.comment}
-                  </p>
-                )}
+        {review.comment && (
+  <p className="text-white/60 text-sm leading-relaxed break-all line-clamp-4">
+    {review.comment}
+  </p>
+)}
                 {review.evidence_url && (
                   <a
                     href={review.evidence_url}
@@ -484,7 +484,7 @@ export default function VendorPage() {
         {/* Disclaimer */}
         <p className="text-white/20 text-xs text-center leading-relaxed pb-4">
           Trust scores are based on community-submitted reviews and automated analysis.
-          CheckVendor does not independently verify claims made in reviews.
+          Vendorfy does not independently verify claims made in reviews.
           All reviews represent the opinions of individual community members.
         </p>
 

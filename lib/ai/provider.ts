@@ -3,12 +3,14 @@ import { RulesProvider } from "./rules";
 import { ClaudeProvider } from "./claude";
 import { OpenAIProvider } from "./openai";
 import { GeminiProvider } from "./gemini";
+import { GroqProvider } from "./groq";
 
-const providers: Record<string, AIProvider> = {
+export const providers: Record<string, AIProvider> = {
   rules: new RulesProvider(),
   claude: new ClaudeProvider(),
   openai: new OpenAIProvider(),
   gemini: new GeminiProvider(),
+  groq: new GroqProvider(), 
 };
 
 // Change AI_PROVIDER in .env.local to swap — no other code changes needed

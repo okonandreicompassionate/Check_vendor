@@ -1,108 +1,112 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createHash } from "crypto";
-import { supabaseAdmin } from "@/lib/supabase";
-import { z } from "zod";
+import { ai } from "@/lib/ai";
+import { calculateFinalScore } from "@/lib/ai/scoring";
+import {
+  calculateAgreement,
+  calculateConfidence,
+} from "@/lib/ai/confidence";
+import { scoreWebEvidence } from "@/lib/ai/webEvidence";
+import {
+  discoverVendor,
+} from "@/app/api/services/discovery";
+import {
+  scrapeUrl,
+} from "@/app/api/services/scraper";
+import {
+  extractEvidence,
+} from "@/app/api/services/evidence";
 
-const ReportSchema = z.object({
-  verdict: z.enum(["legit", "scammed"]),
-  comment: z.string().max(500).optional(),
-  evidence_url: z.string().url().optional(),
-  platform: z.enum(["instagram", "whatsapp", "twitter", "tiktok"]).default("instagram"),
-});
-
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ handle: string }> }
+export async function GET(
+  req: Request,
+  { params }: { params: { handle: string } }
 ) {
-  try {
-    const { handle: rawHandle } = await params;
-    const handle = rawHandle.toLowerCase().trim();
-    const ip = request.headers.get("x-forwarded-for") ?? "unknown";
-    const ipHash = createHash("sha256").update(ip).digest("hex");
+  const vendor = params.handle;
 
-    const body = await request.json();
-    const parsed = ReportSchema.safeParse(body);
+  // 1. reviews (you already have this logic)
+  const reviews = []; // keep your existing DB fetch
 
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Invalid request.", details: parsed.error.flatten() },
-        { status: 400 }
-      );
-    }
+  // 2. rules engine
+  const rules =
+    await ai.rules.analyzeSentiment(
+      reviews.map((r) => r.comment)
+    );
 
-    const { verdict, comment, evidence_url, platform } = parsed.data;
+  // 3. fake detection
+  const fake =
+    await ai.groq.detectFakeReviews(reviews);
 
-    const { data: existing } = await supabaseAdmin
-      .from("reviews")
-      .select("id")
-      .eq("ip_hash", ipHash) as { data: any };
+  // 4. web discovery
+  const discovered =
+    await discoverVendor(vendor);
 
-    if ((existing?.length ?? 0) >= 3) {
-      return NextResponse.json(
-        { error: "You have already submitted the maximum number of reviews for this vendor." },
-        { status: 429 }
-      );
-    }
+  // 5. scraping + evidence
+  const evidence = [];
 
-    let { data: vendor } = await supabaseAdmin
-      .from("vendors")
-      .select("*")
-      .eq("handle", handle)
-      .single() as { data: any };
+  for (const d of discovered.slice(0, 5)) {
+    try {
+      const markdown =
+        await scrapeUrl(d.url);
 
-    if (!vendor) {
-      const { data: newVendor } = await supabaseAdmin
-        .from("vendors")
-        .insert({
-          handle,
-          platform,
-          trust_score: 0,
-          total_reviews: 0,
-          flagged: false,
-        } as any)
-        .select()
-        .single() as { data: any };
+      const e =
+        await extractEvidence(
+          markdown,
+          d.url
+        );
 
-      vendor = newVendor;
-    }
+      evidence.push(e);
+    } catch {}
+  }
 
-    if (!vendor) {
-      return NextResponse.json(
-        { error: "Could not find or create vendor." },
-        { status: 500 }
-      );
-    }
+  // 6. web score
+  const webScore =
+    scoreWebEvidence(evidence);
 
-    const { data: review, error } = await supabaseAdmin
-      .from("reviews")
-      .insert({
-        vendor_id: vendor.id,
-        verdict,
-        comment: comment ?? null,
-        evidence_url: evidence_url ?? null,
-        ip_hash: ipHash,
-      } as any)
-      .select()
-      .single() as { data: any; error: any };
-
-    if (error) {
-      return NextResponse.json(
-        { error: "Could not submit review." },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "Review submitted successfully. Thank you for keeping the community safe.",
-      review_id: review.id,
+  // 7. AI truth model
+  const aiTruth =
+    await ai.groq.analyzeVendorTruth({
+      vendor,
+      reviews: reviews.map(
+        (r) => r.comment ?? ""
+      ),
+      webEvidence: evidence,
     });
 
-  } catch (err) {
-    console.error("[POST /api/vendor/report]", err);
-    return NextResponse.json(
-      { error: "Something went wrong." },
-      { status: 500 }
-    );
-  }
+  // 8. agreement
+  const agreement =
+    calculateAgreement({
+      rulesScore: rules.score,
+      aiScore:
+        aiTruth.confidence ?? 70,
+      webScore,
+    });
+
+  // 9. confidence
+  const confidence =
+    calculateConfidence({
+      reviewCount: reviews.length,
+      aiConfidence:
+        aiTruth.confidence ?? 70,
+      sourceCount: evidence.length,
+      agreementScore: agreement,
+    });
+
+  // 10. final score
+  const score =
+    calculateFinalScore({
+      communityScore: rules.score,
+      fakeScore:
+        100 - fake.suspicion_score,
+      webScore,
+      aiConfidence: confidence,
+    });
+
+  return Response.json({
+    vendor,
+    rules,
+    fake,
+    webScore,
+    aiTruth,
+    confidence,
+    score,
+    evidence,
+  });
 }

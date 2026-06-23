@@ -39,7 +39,7 @@ export default function Home() {
       <nav className="flex items-center justify-between px-6 py-4 border-b border-white/10">
         <div className="flex items-center gap-2">
           <Shield className="text-green-400" size={22} />
-          <span className="font-bold text-lg tracking-tight">CheckVendor</span>
+          <span className="font-bold text-lg tracking-tight">Vendorfy</span>
         </div>
         <a
           href="/docs"
@@ -223,14 +223,15 @@ export default function Home() {
       {/* Footer */}
       <div className="border-t border-white/10 px-6 py-6 text-center">
         <p className="text-white/20 text-xs">
-          CheckVendor — Community reviews reflect the opinions of individual users, not CheckVendor.
+          Vendorfy — Community reviews reflect the opinions of individual users, not Vendorfy
+          .
           All scores are based on submitted community data.{" "}
           <a href="/docs" className="underline hover:text-white/40 transition-colors">
             API access
           </a>
         </p>
         <p className="text-white/20 text-xs">
-  CheckVendor — Community reviews reflect the opinions of individual users, not CheckVendor.{" "}
+  Vendorfy — Community reviews reflect the opinions of individual users, not Vendorfy.{" "}
   <a href="/docs" className="underline hover:text-white/40 transition-colors">
     API access
   </a>

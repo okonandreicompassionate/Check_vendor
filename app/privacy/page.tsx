@@ -29,7 +29,7 @@ export default function PrivacyPage() {
         </Link>
         <div className="flex items-center gap-2">
           <Shield className="text-green-400" size={18} />
-          <span className="font-bold text-sm">CheckVendor</span>
+          <span className="font-bold text-sm">Vendorfy</span>
         </div>
         <div className="w-16" />
       </nav>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
           <h1 className="text-3xl font-bold">Privacy Policy</h1>
           <p className="text-white/30 text-xs">Last updated: June 2026</p>
           <p className="text-white/50 text-sm leading-relaxed mt-2">
-            CheckVendor is a community-powered vendor trust platform. We take
+            Vendorfy is a community-powered vendor trust platform. We take
             your privacy seriously. This policy explains what data we collect,
             why we collect it, and how you can control it. We comply with the
             Nigeria Data Protection Regulation (NDPR) and applicable data
@@ -52,14 +52,14 @@ export default function PrivacyPage() {
         {/* Who we are */}
         <Section title="1. Who We Are">
           <p>
-            CheckVendor is an online platform that allows users to search for
+            Vendorfy is an online platform that allows users to search for
             and submit reviews about vendors operating on social media platforms
             including Instagram, TikTok, WhatsApp, and Twitter/X. We operate
-            the website at checkvendor.ng and provide an API for developers and
+            the website at Vendorfy.ng and provide an API for developers and
             businesses.
           </p>
           <p>
-            For data-related enquiries, contact us at: privacy@checkvendor.ng
+            For data-related enquiries, contact us at: privacy@Vendorfy.ng
           </p>
         </Section>
 
@@ -147,15 +147,15 @@ export default function PrivacyPage() {
         {/* Community reviews */}
         <Section title="5. Community Reviews and Vendor Data">
           <p>
-            Reviews submitted on CheckVendor are community opinions. They
+            Reviews submitted on Vendorfy are community opinions. They
             reflect the personal experiences of individual users and do not
-            represent the views of CheckVendor.
+            represent the views of Vendorfy.
           </p>
           <p>
             Vendor handles are publicly available social media identifiers. By
             searching a vendor, a public record is created on our platform.
             Vendors may request removal of their record if it contains
-            inaccurate information by contacting us at privacy@checkvendor.ng.
+            inaccurate information by contacting us at privacy@Vendorfy.ng.
           </p>
           <p>
             We reserve the right to remove reviews that violate our community
@@ -224,7 +224,7 @@ export default function PrivacyPage() {
           </div>
           <p>
             To exercise any of these rights, contact us at
-            privacy@checkvendor.ng. We will respond within 30 days.
+            privacy@Vendorfy.ng. We will respond within 30 days.
           </p>
         </Section>
 
@@ -255,14 +255,14 @@ export default function PrivacyPage() {
           </p>
           <p>
             No system is 100% secure. If you discover a security vulnerability,
-            please report it responsibly to security@checkvendor.ng.
+            please report it responsibly to security@Vendorfy.ng.
           </p>
         </Section>
 
         {/* Cookies */}
         <Section title="10. Cookies">
           <p>
-            CheckVendor does not use advertising cookies or tracking pixels. We
+            Vendorfy does not use advertising cookies or tracking pixels. We
             may use essential session cookies required for the platform to
             function. We do not use Google Analytics or any third-party
             analytics that track you across sites.
@@ -274,7 +274,7 @@ export default function PrivacyPage() {
           <p>
             We may update this policy as the platform evolves. We will update
             the date at the top of this page when changes are made. Continued
-            use of CheckVendor after changes constitutes acceptance of the
+            use of Vendorfy after changes constitutes acceptance of the
             updated policy.
           </p>
         </Section>
@@ -283,12 +283,12 @@ export default function PrivacyPage() {
         <Section title="12. Contact">
           <p>
             For any privacy-related questions, requests, or complaints contact
-            us at privacy@checkvendor.ng. We aim to respond within 30 days.
+            us at privacy@Vendorfy.ng. We aim to respond within 30 days.
           </p>
         </Section>
 
         <p className="text-white/20 text-xs text-center pb-4 border-t border-white/10 pt-8">
-          CheckVendor — Keeping Nigerian commerce safer, one review at a time.
+          Vendorfy — Keeping Nigerian commerce safer, one review at a time.
         </p>
 
       </div>

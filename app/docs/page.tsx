@@ -103,7 +103,7 @@ export default function DocsPage() {
         </Link>
         <div className="flex items-center gap-2">
           <Shield className="text-green-400" size={18} />
-          <span className="font-bold text-sm">CheckVendor API</span>
+          <span className="font-bold text-sm">Vendorfy API</span>
         </div>
         <div className="w-16" />
       </nav>
@@ -131,7 +131,7 @@ export default function DocsPage() {
 
         {/* Base URL */}
         <Section title="Base URL">
-          <CodeBlock code="https://checkvendor.ng/api" lang="text" />
+          <CodeBlock code="https://Vendorfy.ng/api" lang="text" />
         </Section>
 
         {/* Authentication */}
@@ -165,7 +165,7 @@ export default function DocsPage() {
             <div className="flex flex-col gap-2">
               <p className="text-xs text-white/30 uppercase tracking-widest">Example request</p>
               <CodeBlock
-                code={`curl https://checkvendor.ng/api/vendor/zeeluxury_ng \\
+                code={`curl https://Vendorfy.ng/api/vendor/zeeluxury_ng \\
   -H "Authorization: Bearer YOUR_API_KEY"`}
                 lang="bash"
               />
@@ -186,7 +186,7 @@ export default function DocsPage() {
                     summary:
                       "Based on 24 community reviews, this vendor has a generally positive reputation. 20 reviewers reported a positive experience, while 4 reported a negative one.",
                     sources: [
-                      "24 community reviews submitted on CheckVendor.",
+                      "24 community reviews submitted on Vendorfy.",
                       "20 reviewers reported a positive transaction.",
                       "4 reviewers reported a negative experience.",
                     ],
@@ -238,7 +238,7 @@ export default function DocsPage() {
             <div className="flex flex-col gap-2">
               <p className="text-xs text-white/30 uppercase tracking-widest">Example request</p>
               <CodeBlock
-                code={`curl -X POST https://checkvendor.ng/api/vendor/zeeluxury_ng/report \\
+                code={`curl -X POST https://Vendorfy.ng/api/vendor/zeeluxury_ng/report \\
   -H "Content-Type: application/json" \\
   -d '{"verdict":"scammed","comment":"Paid and never received my order","platform":"instagram"}'`}
                 lang="bash"
@@ -275,7 +275,7 @@ export default function DocsPage() {
               Returns paginated community reviews for a vendor.
             </p>
             <CodeBlock
-              code={`curl "https://checkvendor.ng/api/vendor/zeeluxury_ng/reviews?page=1&limit=10" \\
+              code={`curl "https://Vendorfy.ng/api/vendor/zeeluxury_ng/reviews?page=1&limit=10" \\
   -H "Authorization: Bearer YOUR_API_KEY"`}
               lang="bash"
             />
@@ -431,7 +431,7 @@ export default function DocsPage() {
         </Section>
 
         <p className="text-white/20 text-xs text-center pb-4">
-          Questions? Reach out at hello@checkvendor.ng
+          Questions? Reach out at hello@Vendorfy.ng
         </p>
 
       </div>
