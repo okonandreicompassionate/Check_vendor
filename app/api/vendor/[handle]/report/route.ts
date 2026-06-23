@@ -9,7 +9,7 @@ import {
   discoverVendor,
 } from "@/app/api/services/discovery";
 import {
-  scrapeUrl,
+  scrapeUrls,
 } from "@/app/api/services/scraper";
 import {
   extractEvidence,
